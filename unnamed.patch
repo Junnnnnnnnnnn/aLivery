@@ -1,0 +1,26 @@
+Index: .idea/.name
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.name	(revision 4ae78dc12ae1dee30c8329ab5334f8d0ab4800ec)
++++ .idea/.name	(revision 4ae78dc12ae1dee30c8329ab5334f8d0ab4800ec)
+@@ -0,0 +1,1 @@
++NaverMapPractice
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(revision 4ae78dc12ae1dee30c8329ab5334f8d0ab4800ec)
++++ .idea/vcs.xml	(revision 4ae78dc12ae1dee30c8329ab5334f8d0ab4800ec)
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file

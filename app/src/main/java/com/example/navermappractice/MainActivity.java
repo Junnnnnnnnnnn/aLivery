@@ -2,18 +2,24 @@ package com.example.navermappractice;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
-import com.naver.maps.map.NaverMapSdk;
+import com.naver.maps.map.MapFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NaverMapSdk.getInstance(this).setClient(
-                new NaverMapSdk.NaverCloudPlatformClient("q1ach6xhui"));
+        FragmentManager fm  = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map_fragment);
+
+        if (mapFragment == null){
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().add(R.id.map_fragment , mapFragment).commit();
+        }
     }
 }
