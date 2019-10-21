@@ -19,25 +19,25 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/writeB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="글쓰기" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/markerB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="마커찍기" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/shareB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="공유" />
         </LinearLayout>
     </RelativeLayout>
 
