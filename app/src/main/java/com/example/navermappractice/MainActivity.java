@@ -1,6 +1,5 @@
 package com.example.navermappractice;
 
-import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,25 +17,42 @@ import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
-import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.Overlay;;
 
 //OnMapReadyCallback <- Naver 객체 사용 위해 상속(implements)
 //implements는 메서드를 재정의 해야함으로 onMapReady를 Override함
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback{
-    Button markerButton;
-    wFragment wfragment;
-    MapFragment mapFragment;
-    MapFragment mapFragment1;
+    //사용한 프래그먼트
     FragmentManager fm;
+    MapFragment mapFragment; //네이버지도가 들어가게 될 객체
+    MainButtonFragment mainButtonFragment; //네이버지도에서 동작하는 버튼의 프래그먼트 객체
+
+    //사용한 버튼
+    Button buttonAddMarker; //누른 위치에 마커를 추가하는 버튼
+
+    //마커관련
+    Marker marker = new Marker(); //마커객체
+    InfoWindow infoWindow= new InfoWindow(); //마커 클릭 시 표시되는 알림창
+
+    //좌표변수
     String lat;
     String lng;
-    Marker marker = new Marker();
+
+    //MainActivity생성 시 실행되는코드
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main); //xml에 정의된 UI를 뿌려줌
 
+        InitNaverMap(savedInstanceState); //기초 화면이 되는 naverMap(프래그먼트)에 네이버지도를 넣음
+
+        addFragment(mainButtonFragment.newinstance()); //mainButtonFragment를 지도 위에 덮어써줌
+    }
+//=============================================================================================
+    //네이버지도객체를 초기화시켜줌
+    public void InitNaverMap(Bundle savedInstanceState){
         //네이버 지도를 Fragment로 객체화함
         fm  = getSupportFragmentManager();
         mapFragment = (MapFragment)fm.findFragmentById(R.id.map_fragment);
@@ -45,65 +61,93 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mapFragment = MapFragment.newInstance();
             fm.beginTransaction().add(R.id.map_fragment , mapFragment).commit();
         }
-        addFragment(wfragment.newinstance());
-
         mapFragment.getMapAsync(this);
-
     }
-
-    //실행될 코드
-    @Override
-    public void onMapReady(@NonNull final NaverMap naverMap) {
-        //지도 클릭 이벤트 리스너 등록
-        naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
-            @Override
-            //지도 클릭 이벤트 리스너 정의
-            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-                //위도
-                lat = Double.toString(latLng.latitude);
-                double dLat = Double.parseDouble(lat);
-                //경도
-                lng = Double.toString(latLng.longitude);
-                double dLng = Double.parseDouble(lng);
-                marker.setPosition(new LatLng(dLat, dLng));
-                marker.setMap(naverMap);
-                //위,경도 알림창 띄우기
-                Toast.makeText(getApplicationContext(),lat+","+lng,Toast.LENGTH_LONG).show();
-
-
-            }
-        });
-
-        markerButton = (Button)findViewById(R.id.markerB);
-        markerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double dLat = Double.parseDouble(lat);
-                double dLng = Double.parseDouble(lng);
-                marker.setPosition(new LatLng(dLat, dLng));
-                marker.setMap(naverMap);
-                Log.i("Test",lat+","+lng);
-            }
-        });
-        marker.setOnClickListener(new Overlay.OnClickListener() {
-            @Override
-            public boolean onClick(@NonNull Overlay overlay) {
-                Log.i("test","MakerClick");
-                Toast.makeText(getApplicationContext(),"클릭되었습니다!!",Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });
-    }
-
+    //사용하진 않았지만 프래그먼트를 교체해주는 것 (추가해주는 것과 다름)
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_fragment, fragment).commit();
     }
+    // 프래그먼트 객체를 추가로 덮어써줌
     private void addFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.map_fragment, fragment).commit();
     }
 
+//============================================================================================
+    @Override
+    //네이버지도 객체가 실행될 때 실행
+    public void onMapReady(@NonNull final NaverMap naverMap) {
+        SetOnMapClickListener(naverMap);
+
+        SetButtonAddMarkerListener();
+
+        SetMarkerOnClickListener();
+    }
+//=============================================================================================
+    //마커 정보창에 대한 함수(미완성)
+    public void SetInfoWindow(){
+        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapFragment.getActivity()){
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow){
+                return "정보창";
+            }
+        });
+    }
+
+    //좌표를 받아 마커가 찍힐 포지션을 넣어준다.
+    public void SetMarkerPosition(@NonNull LatLng latLng){
+        //위도
+        lat = Double.toString(latLng.latitude);
+        double dLat = Double.parseDouble(lat);
+        //경도
+        lng = Double.toString(latLng.longitude);
+        double dLng = Double.parseDouble(lng);
+
+        marker.setPosition(new LatLng(dLat, dLng));
+    }
+
+    //지도 클릭 리스너 정의부분
+    public void SetOnMapClickListener(@NonNull final NaverMap naverMap){
+
+        naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
+            @Override
+            //지도 클릭 이벤트 리스너 정의
+            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                SetMarkerPosition(latLng);
+                SetInfoWindow();
+                marker.setMap(naverMap);
+                infoWindow.open(marker);
+            }
+        });
+    }
+
+    //buttonAddMarker 버튼 (마커 추가버튼) 리스너 정의
+    public void SetButtonAddMarkerListener(){
+        buttonAddMarker = (Button)findViewById(R.id.buttonAddMarker);
+        buttonAddMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                marker=new Marker(marker.getPosition()); //클릭 시 앞서 받은 포지션에 마커를 추가
+                Log.i("Test",lat+","+lng); //확인을 위한 로그표시
+            }
+        });
+    }
+
+    //마커 클릭 리스너 정의  (추가할거 많음) 미완
+    public void SetMarkerOnClickListener(){
+        marker.setOnClickListener(new Overlay.OnClickListener() {
+            @Override
+            public boolean onClick(@NonNull Overlay overlay) { // 버튼클릭하여 저장된 마커의 클릭리스너
+                // 마커 클릭 시 메뉴 팝업
+                Log.i("test","MakerClick");
+                Toast.makeText(getApplicationContext(),"클릭되었습니다!!",Toast.LENGTH_LONG).show();
+
+                return false;
+            }
+        });
+    }
 }
