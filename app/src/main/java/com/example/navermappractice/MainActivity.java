@@ -3,8 +3,11 @@ package com.example.navermappractice;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,9 +31,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     FragmentManager fm;
     MapFragment mapFragment; //네이버지도가 들어가게 될 객체
     MainButtonFragment mainButtonFragment; //네이버지도에서 동작하는 버튼의 프래그먼트 객체
-
+    MarkerButtonFragment MBF;
     //사용한 버튼
     Button buttonAddMarker; //누른 위치에 마커를 추가하는 버튼
+    LinearLayout LL;
 
     //마커관련
     Marker marker = new Marker(); //마커객체
@@ -85,6 +89,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SetButtonAddMarkerListener();
 
         SetMarkerOnClickListener();
+
+        addFragment(MBF.newInstance());
+
+        SetMarkerButtonListener();
     }
 //=============================================================================================
     //마커 정보창에 대한 함수(미완성)
@@ -96,6 +104,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 return "정보창";
             }
         });
+    }
+
+    //마커클릭시 나오는 버튼 리스너
+    public void SetMarkerButtonListener(){
+
     }
 
     //좌표를 받아 마커가 찍힐 포지션을 넣어준다.
@@ -121,6 +134,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 SetInfoWindow();
                 marker.setMap(naverMap);
                 infoWindow.open(marker);
+
+                LL = (LinearLayout)findViewById(R.id.LinearMarkerButton);
+
+//                if(LL.getVisibility()==LL.VISIBLE){
+//                    LL.setVisibility(LL.INVISIBLE);
+//                }
             }
         });
     }
@@ -133,6 +152,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 marker=new Marker(marker.getPosition()); //클릭 시 앞서 받은 포지션에 마커를 추가
                 Log.i("Test",lat+","+lng); //확인을 위한 로그표시
+
+                PopupMenu p=new PopupMenu(getApplicationContext(),v);
+                getMenuInflater().inflate(R.menu.marker_menu,p.getMenu());
+                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(getApplicationContext(),"팝업버튼",Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                });
+                p.show();
+
             }
         });
     }
@@ -146,8 +178,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.i("test","MakerClick");
                 Toast.makeText(getApplicationContext(),"클릭되었습니다!!",Toast.LENGTH_LONG).show();
 
+
+                LL = (LinearLayout)findViewById(R.id.LinearMarkerButton);
+                if(LL.getVisibility()==LL.VISIBLE){
+                    LL.setVisibility(LL.INVISIBLE);
+                }
+                else{
+                    LL.setVisibility(LL.VISIBLE);
+                }
                 return false;
             }
         });
+
+
     }
 }
