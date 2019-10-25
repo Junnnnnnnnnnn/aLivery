@@ -1,5 +1,6 @@
 package com.example.navermappractice;
 
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
@@ -106,9 +107,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SetOnMapClickListener(naverMap);
 
         SetButtonAddMarkerListener();
-
-
-
     }
 //=============================================================================================
     //마커 정보창에 대한 함수(미완성)
@@ -142,9 +140,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             //지도 클릭 이벤트 리스너 정의
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
                 SetMarkerPosition(latLng);
-                SetInfoWindow();
                 marker.setMap(naverMap);
-                infoWindow.open(marker);
 
                 LL = (LinearLayout)findViewById(R.id.LinearMarkerButton);
 
@@ -162,8 +158,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         buttonAddMarker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                infoWindow = new InfoWindow();
+                SetInfoWindow();
+                infoWindow.open(marker);
+                marker.setIconTintColor(Color.RED);
                 SetMarkerOnClickListener();
                 marker =new Marker(marker.getPosition()); //클릭 시 앞서 받은 포지션에 마커를 추가
+
+
+
+
                 Log.i("Test",lat+","+lng); //확인을 위한 로그표시
 
             }
@@ -194,28 +198,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
     //글쓰기 버튼 클릭 리스너 정의
-    public void SetWriteButtonListener(){
-        buttonCreateWrite =(Button)findViewById(R.id.write_button);
+    public void SetWriteButtonListener() {
+        buttonCreateWrite = (Button) findViewById(R.id.write_button);
         buttonCreateWrite.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 replaceFragment(WF.newInstance());
-                Toast.makeText(getApplicationContext(),"클릭되었습니다!!",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "클릭되었습니다!!", Toast.LENGTH_LONG).show();
                 //SetSaveTextButtonListener();
 
             }
         });
-    }
-
-    //
-    public void SetSaveTextButtonListener(){
-        buttonSaveText = (Button)findViewById((R.id.write_Save));
-        buttonSaveText.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //removeFragment(WF);
-            }
-        });
-
     }
 }

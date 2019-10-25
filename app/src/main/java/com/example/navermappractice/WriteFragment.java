@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,8 @@ public class WriteFragment extends Fragment {
     MapFragment mapFragment;
     MarkerButtonFragment MBF;
     Button buttonWriteSave;
+    CharSequence writeTextToCS;
+    EditText textArea;
     public static WriteFragment newInstance(){
         return new WriteFragment();
     }
@@ -30,18 +33,23 @@ public class WriteFragment extends Fragment {
     public  View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_write, container, false);
 
+//       EditText writeText = view.findViewById(R.id.);
+
         buttonWriteSave = (Button)view.findViewById(R.id.write_Save);
         buttonWriteSave.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"클릭되었습니다!!",Toast.LENGTH_LONG).show();
+
             }
         });
 
 
         return view;
     }
-
+    public CharSequence getWriteText(){
+        return writeTextToCS;
+    }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
