@@ -17,7 +17,21 @@
             android:id="@+id/map_fragment"
             android:name="com.naver.maps.map.MapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            >
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:fontFamily="@font/cookierunblack"
+                android:gravity="center"
+                android:text="사용자 다이어리"
+                android:textSize="25dp"
+                android:visibility="visible"
+                tools:visibility="visible" />
+             </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

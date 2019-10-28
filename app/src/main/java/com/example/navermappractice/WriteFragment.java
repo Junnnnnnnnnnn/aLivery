@@ -37,7 +37,6 @@ public class WriteFragment extends Fragment {
 
         buttonWriteSave = (Button)view.findViewById(R.id.write_Save);
         buttonWriteSave.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
@@ -54,10 +53,16 @@ public class WriteFragment extends Fragment {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_fragment, fragment).commit();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
     private void removeFragment(Fragment fragment){
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(fragment).commit();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 }
